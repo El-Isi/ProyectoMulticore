@@ -46,14 +46,11 @@ public class Servidor {
 
                 System.out.println(mensaje);
 
-                FuerzaBruta algoritmo_decifrado = new FuerzaBruta(mensaje_cifrado, mensaje, clav,0, 358800);
+                FuerzaBruta algoritmo_decifrado = new FuerzaBruta(mensaje_cifrado, mensaje, clav, sc,0, 358800);
                 fuerzaBruta.invoke(algoritmo_decifrado);
 
-                //Retorno cuando mi algoritmo decifro el mensaje
-                //out.writeUTF(String.valueOf(output));
-
                 //Cierro el socket
-                sc.close();
+
             }
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);

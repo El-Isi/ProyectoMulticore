@@ -1,3 +1,6 @@
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.concurrent.RecursiveAction;
 
 public class FuerzaBruta extends RecursiveAction {
@@ -7,14 +10,15 @@ public class FuerzaBruta extends RecursiveAction {
     private String clave;
     private final int bloque = 358800/8;
     private int start, end, ipermuta = 0;
-    private static String desifrado;
+    private Socket desifrado;
 
-    FuerzaBruta(String mensaje_cifrado, String mensaje_desifrado, String clave, int start, int end){
+    FuerzaBruta(String mensaje_cifrado, String mensaje_desifrado, String clave, Socket desifrado, int start, int end){
         this.mensaje_cifrado = mensaje_cifrado;
         this.mensaje_desifrado = mensaje_desifrado;
         this.end = end;
         this.start = start;
         this.clave = clave;
+        this.desifrado = desifrado;
     }
 
     @Override
@@ -37,7 +41,14 @@ public class FuerzaBruta extends RecursiveAction {
                             String secretKey = String.valueOf((char) j) + String.valueOf((char) k) + String.valueOf((char) l) + String.valueOf((char) m);
 
                             if (clave.equals(secretKey)) {
-                                System.out.println("su clave secreta es: " + secretKey);
+                                System.out.println("La clave secreta es: " + secretKey);
+                                try {
+                                    DataOutputStream out = new DataOutputStream(desifrado.getOutputStream());
+                                    out.writeUTF(secretKey);
+                                    desifrado.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                                 try {
                                     finalize();
                                 } catch (Throwable throwable) {
@@ -62,8 +73,8 @@ public class FuerzaBruta extends RecursiveAction {
 
         } else {
             int middle = (start + end) / 2;
-            FuerzaBruta subtaskA = new FuerzaBruta(mensaje_cifrado, mensaje_desifrado, clave, start, middle);
-            FuerzaBruta subtaskB = new FuerzaBruta(mensaje_cifrado, mensaje_desifrado, clave,  middle, end);
+            FuerzaBruta subtaskA = new FuerzaBruta(mensaje_cifrado, mensaje_desifrado, clave, desifrado, start, middle);
+            FuerzaBruta subtaskB = new FuerzaBruta(mensaje_cifrado, mensaje_desifrado, clave, desifrado,  middle, end);
             subtaskA.fork();
             subtaskB.fork();
         }

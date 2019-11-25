@@ -11,8 +11,7 @@ public class Cliente {
     public static void main(String[] args) {
 
         //Host del servidor
-        final String HOST = "127.0.0.1"; // Aqui la ip de mi server de AWS
-        // aunque como es dinamica y apague mi server si usted la prueba profe talvez no pase nada
+        final String HOST = "127.0.0.1"; // Aqui la ip de mi server
 
         //Puerto del servidor
         final int PUERTO = 5000;
@@ -20,7 +19,7 @@ public class Cliente {
         DataOutputStream out;
 
         //Llave para encriptar
-        final String secretKey = "aaaa";
+        final String secretKey = "hide";
 
         try {
 
@@ -42,8 +41,8 @@ public class Cliente {
             out.writeUTF(secretKey);
 
             //Recibo si el servidor pudo decifrar y lo impromo
-            //String mensaje = in.readUTF();
-            //System.out.println(mensaje);
+            String mensaje = in.readUTF();
+            System.out.println("El servidor retorno su clave: " + mensaje);
 
             sc.close();
 
